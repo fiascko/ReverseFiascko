@@ -78,7 +78,11 @@ You can also scan completed builds to identify potentially sensitive files, incl
 
 ### AI Analysis Notice
 
-Optionally generate an `AI_ANALYSIS_NOTICE.txt` file alongside release builds.
+Optionally generate an `AI_ANALYSIS_NOTICE.txt` file for release builds.
+
+On Windows and macOS, the notice is generated in two locations:
+- Alongside the game executable or application.
+- Inside the Unity build structure (`_Data` directory on Windows or `Contents/Resources` inside the `.app` bundle on macOS).
 
 The notice communicates that the developer does not authorize unauthorized reverse engineering or analysis of the software.
 
@@ -88,7 +92,9 @@ Depending on how an AI system is configured, the notice may discourage or interr
 
 You can use the standard notice or provide custom text.
 
-This feature is informational and acts as an additional deterrent. It does not guarantee that AI tools will recognize, respect or enforce the notice, nor does it technically prevent reverse engineering or provide guaranteed legal protection.
+This feature is informational and acts as an additional deterrent. Placing the notice inside the build makes it available during file inspection but does not embed it directly into the executable code or guarantee that decompilers or AI tools will read it.
+
+It does not guarantee that AI tools will recognize, respect or enforce the notice, nor does it technically prevent reverse engineering or provide guaranteed legal protection.
 
 ## Security Limitations
 
