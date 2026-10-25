@@ -170,8 +170,10 @@ ReverseFiascko is distributed as a Unity Package Manager (UPM) package.
 1. Open your Unity project.
 2. Open `Window > Package Manager`.
 3. Select **Install package from git URL**.
-4. Enter the Git repository URL for ReverseFiascko.
-5. Install the package.
+4. Enter the following Git repository URL: `https://github.com/fiascko/ReverseFiascko.git`
+5. Click **Install**.
+
+**Important:** Make sure the repository URL ends with `.git` when installing through Unity Package Manager.
 
 Alternatively, download the repository and install it as a local package.
 
