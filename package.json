@@ -1,0 +1,10 @@
+{
+  "name": "com.fiascko.reversefiascko",
+  "version": "1.0.0",
+  "displayName": "ReverseFiascko",
+  "description": "Lightweight Unity build hardening toolkit that promotes security best practices and makes reverse engineering more difficult.",
+  "unity": "6000.3",
+  "author": {
+    "name": "Fiascko"
+  }
+}

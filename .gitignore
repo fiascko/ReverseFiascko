@@ -1,0 +1,81 @@
+# ==============================
+# Unity generated folders
+# ==============================
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# ==============================
+# IDE generated files
+# ==============================
+
+.vs/
+.vscode/
+.idea/
+.gradle/
+.consulo/
+ExportedObj/
+
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.opendb
+*.VC.db
+*.sln.iml
+
+# ==============================
+# Debug and temporary files
+# ==============================
+
+*.pdb
+*.mdb
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+sysinfo.txt
+
+# ==============================
+# Build outputs
+# ==============================
+
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.dSYM/
+
+# ==============================
+# OS generated files
+# ==============================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/

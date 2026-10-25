@@ -1,0 +1,27 @@
+# ==============================
+# Line endings
+# ==============================
+
+* text=auto
+
+# ==============================
+# Source code
+# ==============================
+
+*.cs text eol=lf
+*.asmdef text eol=lf
+*.json text eol=lf
+
+# ==============================
+# Documentation
+# ==============================
+
+*.md text eol=lf
+*.txt text eol=lf
+
+# ==============================
+# Git configuration
+# ==============================
+
+.gitattributes text eol=lf
+.gitignore text eol=lf
