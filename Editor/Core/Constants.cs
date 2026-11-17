@@ -114,7 +114,6 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string CancelButton = "Cancel";
 
         // Apply Protection - Messages
-        public const string ProtectionAppliedMessage = "Protection settings have been applied.";
         public const string ProtectionFullyAppliedMessage = "Protection settings applied successfully. No warnings remain.";
         public const string ProtectionPartiallyAppliedMessage = "Some protection warnings remain. Review the scan results and recommendations below.";
         public const string UnknownBuildTargetError = "Cannot apply protection because the active build target is unknown.";
@@ -128,8 +127,6 @@ namespace Fiascko.ReverseFiascko.Editor.Core
 
         // Build Scan - Interface
         public const string ScanBuildButton = "Scan Build";
-        public const string BuildSelectionMenuTitle = "Scan Build";
-        public const string SelectBuildFolderOption = "Select Build Folder";
         public const string SelectBuildDirectoryTitle = "Select Build Directory";
         public const string BuildScanResultsTitle = "Build Scan Results";
         public const string BuildScannerTitle = "Build Scanner";
@@ -203,13 +200,13 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string WindowsExecutableExtension = ".exe";
         public const string MacApplicationContentsDirectory = "Contents";
         public const string WindowsDataDirectorySuffix = "_Data";
-        public const string WindowsUnityPlayerFile = "UnityPlayer.dll";
         public const string DebugSymbolsExtension = ".pdb";
         public const string MonoDebugSymbolsExtension = ".mdb";
         public const string CSharpSourceExtension = ".cs";
         public const string CSharpProjectExtension = ".csproj";
         public const string VisualStudioSolutionExtension = ".sln";
         public const string MacDebugSymbolsExtension = ".dSYM";
+        public const string MacApplicationResourcesDirectory = "Resources";
 
         // Build Validation - Interface
         public const string ValidationModeLabel = "Build Validation";
@@ -231,8 +228,6 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string AiNoticeDescription = "Configure an informational notice for release builds. It communicates restrictions to AI systems and automated analysis tools but does not technically prevent analysis.";
         public const string AiNoticeEnabledLabel = "Enable AI Analysis Notice";
         public const string AiNoticeModeLabel = "Notice Content";
-        public const string AiNoticeStandardLabel = "Standard Notice";
-        public const string AiNoticeCustomLabel = "Custom Notice";
         public const string AiNoticePreviewLabel = "Notice Preview";
         public const string AiNoticeCustomContentLabel = "Custom Notice Content";
         public const string AiNoticeEmptyWarning = "The custom notice is empty. The standard notice will be used instead.";

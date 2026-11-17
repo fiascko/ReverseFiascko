@@ -113,7 +113,7 @@ namespace Fiascko.ReverseFiascko.Editor.Build
                 Constants.MacApplicationExtension,
                 StringComparison.OrdinalIgnoreCase))
             {
-                return Path.Combine(fullPath, "Contents", "Resources");
+                return Path.Combine(fullPath, Constants.MacApplicationContentsDirectory, Constants.MacApplicationResourcesDirectory);
             }
 
             if (fullPath.EndsWith(Constants.WindowsExecutableExtension, StringComparison.OrdinalIgnoreCase))
