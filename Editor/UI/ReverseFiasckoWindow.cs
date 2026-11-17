@@ -17,6 +17,9 @@ namespace Fiascko.ReverseFiascko.Editor.UI
         private Vector2 _customNoticeScrollPosition;
         private string _buildPath;
         private string _statusMessage;
+        private bool _showProjectProtection = true;
+        private bool _showBuildValidation;
+        private bool _showBuildScanner;
         private bool _showAiNoticeSettings;
         private MessageType _statusMessageType = MessageType.Info;
 
@@ -42,6 +45,9 @@ namespace Fiascko.ReverseFiascko.Editor.UI
             DrawBuildValidationSection();
 
             EditorGUILayout.Space();
+            DrawBuildScannerSection();
+
+            EditorGUILayout.Space();
             DrawAiNoticeSettings();
 
             GUILayout.Space(Constants.WindowBottomSpacing);
@@ -54,9 +60,6 @@ namespace Fiascko.ReverseFiascko.Editor.UI
 
         private static void DrawHeader()
         {
-            EditorGUILayout.LabelField(Constants.PackageName, EditorStyles.boldLabel);
-            EditorGUILayout.Space();
-
             EditorGUILayout.HelpBox(Constants.PackageDescription, MessageType.Info);
             EditorGUILayout.Space();
         }
@@ -100,13 +103,14 @@ namespace Fiascko.ReverseFiascko.Editor.UI
         {
             ValidationSettings settings = ValidationSettings.instance;
 
-            EditorGUILayout.LabelField(Constants.ValidationModeLabel, EditorStyles.boldLabel);
-            EditorGUILayout.Space();
             EditorGUILayout.HelpBox(Constants.ValidationModeDescription, MessageType.Info);
 
             EditorGUI.BeginChangeCheck();
 
-            ValidationMode mode = (ValidationMode)EditorGUILayout.EnumPopup(settings.Mode, GUILayout.ExpandWidth(false));
+            ValidationMode mode = (ValidationMode)EditorGUILayout.EnumPopup(
+                settings.Mode,
+                GUILayout.ExpandWidth(true)
+            );
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -153,7 +157,7 @@ namespace Fiascko.ReverseFiascko.Editor.UI
             AiNoticeMode mode =
                 (AiNoticeMode)EditorGUILayout.EnumPopup(
                     settings.AiNoticeMode,
-                    GUILayout.ExpandWidth(false)
+                    GUILayout.ExpandWidth(true)
                 );
 
             if (EditorGUI.EndChangeCheck())
@@ -388,10 +392,16 @@ namespace Fiascko.ReverseFiascko.Editor.UI
 
         private void DrawProjectProtectionSection()
         {
-            EditorGUILayout.LabelField(
+            _showProjectProtection = EditorGUILayout.Foldout(
+                _showProjectProtection,
                 Constants.ProjectProtectionLabel,
-                EditorStyles.boldLabel
+                true
             );
+
+            if (!_showProjectProtection)
+            {
+                return;
+            }
 
             EditorGUILayout.Space();
 
@@ -421,9 +431,37 @@ namespace Fiascko.ReverseFiascko.Editor.UI
 
         private void DrawBuildValidationSection()
         {
-            DrawValidationSettings();
+            _showBuildValidation = EditorGUILayout.Foldout(
+                _showBuildValidation,
+                Constants.ValidationModeLabel,
+                true
+            );
+
+            if (!_showBuildValidation)
+            {
+                return;
+            }
 
             EditorGUILayout.Space();
+
+            DrawValidationSettings();
+        }
+
+        private void DrawBuildScannerSection()
+        {
+            _showBuildScanner = EditorGUILayout.Foldout(
+                _showBuildScanner,
+                Constants.BuildScannerTitle,
+                true
+            );
+
+            if (!_showBuildScanner)
+            {
+                return;
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.HelpBox(Constants.BuildScannerDescription, MessageType.Info);
 
             if (GUILayout.Button(
                 Constants.ScanBuildButton,

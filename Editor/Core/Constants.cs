@@ -131,6 +131,8 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string SelectBuildFolderOption = "Select Build Folder";
         public const string SelectBuildDirectoryTitle = "Select Build Directory";
         public const string BuildScanResultsTitle = "Build Scan Results";
+        public const string BuildScannerTitle = "Build Scanner";
+        public const string BuildScannerDescription = "Scan a compiled build to detect potentially sensitive files and debugging artifacts that should not be included in a public release.";
 
         // Build Scan - Labels
         public const string BuildScanName = "Build Scan";
