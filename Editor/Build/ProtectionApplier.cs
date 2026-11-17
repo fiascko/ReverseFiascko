@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: ProtectionApplier.cs
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;

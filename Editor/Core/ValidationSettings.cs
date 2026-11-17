@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: ValidationSettings.cs
 using UnityEditor;
 
 namespace Fiascko.ReverseFiascko.Editor.Core

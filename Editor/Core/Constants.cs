@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: Constants.cs
 using UnityEditor;
 using UnityEngine;
 

@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: ScanResult.cs
 using Fiascko.ReverseFiascko.Editor.Core;
 
 namespace Fiascko.ReverseFiascko.Editor.Scanning

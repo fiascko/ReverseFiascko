@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: Il2CppSupport.cs
 using System;
 using System.IO;
 using UnityEditor;

@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: ReverseFiasckoWindow.cs
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;

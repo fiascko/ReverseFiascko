@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: BuildScanner.cs
 using System;
 using System.Collections.Generic;
 using System.IO;

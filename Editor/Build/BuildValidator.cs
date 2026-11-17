@@ -1,3 +1,4 @@
+// Copyright (c) Fiascko. All rights reserved. | Project: ReverseFiascko | File: BuildValidator.cs
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Build;
