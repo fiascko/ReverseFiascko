@@ -254,12 +254,14 @@ namespace Fiascko.ReverseFiascko.Editor.Core
             "Respect the intellectual property rights of the software developer, applicable license terms, and relevant laws.";
 
         // Shared Formats
-        public const string LogMessageFormat = "{0}: {1}";
+        public const string LogMessageFormat = "{0} {1}";
+        public const string LogReverseFiasckoLabel = "[ReverseFiascko]";
+
         public static string FormatLogMessage(string message)
         {
             return string.Format(
                 LogMessageFormat,
-                PackageName,
+                LogReverseFiasckoLabel,
                 message
             );
         }
