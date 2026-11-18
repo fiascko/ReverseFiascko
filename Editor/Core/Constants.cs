@@ -98,10 +98,9 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string Il2CppVariationMarker = "il2cpp";
 
         // IL2CPP Support - Messages
-        public const string Il2CppInstallInstructions = "Open Unity Hub, select Installs, choose Add modules for your Unity version, and install the required IL2CPP Build Support module. Restart Unity after installation.";
         public const string Il2CppUnknownMessage = "IL2CPP module availability could not be verified. Check the installed build support modules in Unity Hub.";
         public const string Il2CppAvailableMessage = "IL2CPP player files were detected. A successful build is still required to verify the complete toolchain.";
-        public const string Il2CppMissingMessage = "Required IL2CPP player files were not detected. " + Il2CppInstallInstructions;
+        public const string Il2CppMissingMessage = "Required IL2CPP player files were not detected. Open Unity Hub, select Installs, choose Add modules for your Unity version, and install the required IL2CPP Build Support module. Restart Unity after installation.";
         public const string Il2CppUnsupportedMessage = "The selected build target is not supported by the current Unity installation or host environment.";
         public const string Il2CppDifferentTargetMessage = "IL2CPP support could not be verified because the requested build target differs from the active editor target.";
         public const string Il2CppNotEnabledMessage = "IL2CPP is not enabled for the selected build target.";
