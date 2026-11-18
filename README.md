@@ -43,6 +43,9 @@ Everything runs locally inside the Unity Editor.
 - Scan completed builds for potentially sensitive files
 - Detect debug symbols (`.pdb`, `.mdb`, `.dSYM`)
 - Detect source and project files (`.cs`, `.csproj`, `.sln`)
+- Detect potentially sensitive files (`.env`, `.pem`, `.key`, `.p12`, `.pfx`)
+- Detect potentially sensitive configuration files (`appsettings.json`, `credentials.json`)
+- Detect backup files (`.bak`, `.backup`, `.old`)
 - Identify Unity diagnostic and backup directories
 - Display scan results and security recommendations
 - Generate an optional AI Analysis Notice for release builds
@@ -52,7 +55,7 @@ Everything runs locally inside the Unity Editor.
 
 ## How It Works
 
-ReverseFiascko focuses on three areas.
+ReverseFiascko focuses on four areas.
 
 ### Project Protection
 
@@ -74,7 +77,25 @@ Choose how ReverseFiascko handles protection warnings before building.
 
 Development builds are excluded from automatic validation.
 
-You can also scan completed builds to identify potentially sensitive files, including debug symbols, C# source files and project files.
+### Build Scanner
+
+Scan completed Windows and macOS builds to identify potentially sensitive files that may have been included in a public release.
+
+ReverseFiascko detects:
+
+- Debug symbols (`.pdb`, `.mdb`, `.dSYM`)
+- Source and project files (`.cs`, `.csproj`, `.sln`)
+- Potentially sensitive files (`.env`, `.pem`, `.key`, `.p12`, `.pfx`)
+- Environment configuration variants (such as `.env.local` and `.env.production`)
+- Potentially sensitive configuration files (`appsettings.json`, `credentials.json`)
+- Backup files (`.bak`, `.backup`, `.old`)
+- Unity diagnostic and backup directories
+
+Each detected file is reported with its location, potential risk and recommended action.
+
+The scanner does not inspect file contents, modify files or automatically remove detected items.
+
+Detection is based on filenames, extensions and directory structures. A warning does not necessarily indicate a security vulnerability, and legitimate files may be required by the application.
 
 ### AI Analysis Notice
 
@@ -115,6 +136,8 @@ ReverseFiascko is primarily intended to:
 ReverseFiascko is not an anti-cheat system, code obfuscator, encryption tool or comprehensive security solution.
 
 A successful scan means that the checked conditions passed. It does not mean that the build is completely secure.
+
+The Build Scanner uses filename, extension and directory-based detection. It does not inspect file contents or guarantee the detection of embedded secrets, credentials or other sensitive information.
 
 **Security is a process, not a checkbox.**
 

@@ -158,7 +158,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         // Build Scan - Formats
         public const string BuildScanCompletedFormat = "{0} Warnings: {1}, Not checked: {2}";        
         public const string BuildScanSummaryFormat = "Scanned {0} files. Found {1} potentially sensitive file(s) in the build distribution.";
-        public const string DiagnosticSummaryFormat = "Found {0} diagnostic file(s). {1}";
+        public const string DiagnosticSummaryFormat = "Found {0} potentially sensitive diagnostic file(s).\n\nDirectories to exclude from distribution:\n{2}\n\n{1}";
         public const string BuildScanSummaryDetailsFormat = "{0}: {1}\n{2}: {3}\n{4}: {5}\n{6}: {7}\n\n{8}";
         public const string BuildScanFileDetailsFormat = "{0}\n\n{1}: {2}";
         public const string BuildScanFileInformationFormat = "{0}: {1}\n{2}: {3}\n{4}: {5}";
@@ -171,6 +171,10 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string CSharpProjectType = "C# Project File";
         public const string VisualStudioSolutionType = "Visual Studio Solution";
         public const string UnknownFileType = "Unknown";
+        public const string SecretFileType = "Potential Secret or Key File";
+        public const string EnvironmentFileType = "Environment Configuration";
+        public const string ConfigurationFileType = "Potentially Sensitive Configuration";
+        public const string BackupFileType = "Backup File";
 
         // Build Scan - Risks & Recommendations
         public const string DebugSymbolsRisk = "Debug symbols may expose information that makes reverse engineering easier.";
@@ -187,12 +191,20 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string VisualStudioSolutionRecommendation = "Exclude Visual Studio solution files from public release distributions.";
         public const string UnknownFileRisk = "This file may contain development or debugging information.";
         public const string UnknownFileRecommendation = "Review this file before including it in a public release.";
+        public const string SecretFileRisk = "This file may contain cryptographic keys, certificates, or other sensitive material.";
+        public const string SecretFileRecommendation = "Review whether this file is required at runtime and ensure no private keys or secrets are distributed.";
+        public const string EnvironmentFileRisk = "Environment configuration files may contain credentials or other sensitive settings.";
+        public const string EnvironmentFileRecommendation = "Review the file and avoid distributing secrets. Keep it only if the application requires it.";
+        public const string ConfigurationFileRisk = "This configuration file may contain credentials or internal settings.";
+        public const string ConfigurationFileRecommendation = "Verify its contents and keep it only if required by the application.";
+        public const string BackupFileRisk = "Backup files may expose older code, configuration, or sensitive information.";
+        public const string BackupFileRecommendation = "Review the backup and exclude it from public releases unless explicitly required.";
 
         // Build Scan - Diagnostic Files
         public const string DiagnosticFilesName = "Diagnostic Files";
         public const string DiagnosticDirectoryMarker = "DoNotShip";
         public const string BackupDirectoryMarker = "BackUpThisFolder_ButDontShipItWithYourGame";
-        public const string DiagnosticFilesMessage = "Potentially sensitive files were found in diagnostic or backup directories. Do not include these directories in the public distribution.";
+        public const string DiagnosticFilesMessage = "Do not distribute these directories with your game.";
 
         // Build Scan - Paths & Extensions
         public const string MacApplicationExtension = ".app";
@@ -206,6 +218,18 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string VisualStudioSolutionExtension = ".sln";
         public const string MacDebugSymbolsExtension = ".dSYM";
         public const string MacApplicationResourcesDirectory = "Resources";
+        public const string EnvironmentFileExtension = ".env";
+        public const string EnvironmentFileName = ".env";
+        public const string EnvironmentFilePrefix = ".env.";
+        public const string PemFileExtension = ".pem";
+        public const string KeyFileExtension = ".key";
+        public const string P12FileExtension = ".p12";
+        public const string PfxFileExtension = ".pfx";
+        public const string BackupFileExtension = ".bak";
+        public const string BackupLongFileExtension = ".backup";
+        public const string OldFileExtension = ".old";
+        public const string AppSettingsFileName = "appsettings.json";
+        public const string CredentialsFileName = "credentials.json";
 
         // Build Validation - Interface
         public const string ValidationModeLabel = "Build Validation";

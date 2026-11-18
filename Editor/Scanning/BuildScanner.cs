@@ -15,7 +15,15 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                 Constants.MonoDebugSymbolsExtension,
                 Constants.CSharpSourceExtension,
                 Constants.CSharpProjectExtension,
-                Constants.VisualStudioSolutionExtension
+                Constants.VisualStudioSolutionExtension,
+                Constants.EnvironmentFileExtension,
+                Constants.PemFileExtension,
+                Constants.KeyFileExtension,
+                Constants.P12FileExtension,
+                Constants.PfxFileExtension,
+                Constants.BackupFileExtension,
+                Constants.BackupLongFileExtension,
+                Constants.OldFileExtension
             };
 
         public static List<ScanResult> Scan(string buildPath)
@@ -36,6 +44,7 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
             int scannedFiles = 0;
             int detectedFiles = 0;
             int diagnosticFiles = 0;
+            List<string> diagnosticDirectories = new List<string>();
 
             try
             {
@@ -61,8 +70,9 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                     }
 
                     string extension = Path.GetExtension(file);
+                    string fileName = Path.GetFileName(file);
 
-                    if (IsDebugSymbolDirectory(file) || !SensitiveExtensions.Contains(extension))
+                    if (IsDebugSymbolDirectory(file) || (!SensitiveExtensions.Contains(extension) && !IsSensitiveFileName(fileName)))
                     {
                         continue;
                     }
@@ -75,7 +85,7 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
 
                     detectedFiles++;
 
-                    string details = GetFileInformation(extension);
+                    string details = GetFileInformation(extension, fileName);
                     string relativePath = GetRelativePath(buildPath, file);
 
                     results.Add(new ScanResult(
@@ -95,6 +105,15 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                     "*",
                     SearchOption.AllDirectories))
                 {
+                    string directoryName = Path.GetFileName(directory);
+
+                    if ((directoryName.IndexOf(Constants.DiagnosticDirectoryMarker, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        directoryName.IndexOf(Constants.BackupDirectoryMarker, StringComparison.OrdinalIgnoreCase) >= 0) &&
+                        !IsDiagnosticFile(buildPath, directory))
+                    {
+                        diagnosticDirectories.Add(GetRelativePath(buildPath, directory));
+                    }
+
                     if (!directory.EndsWith(
                         Constants.MacDebugSymbolsExtension,
                         StringComparison.OrdinalIgnoreCase))
@@ -177,14 +196,17 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                     status
                 ));
 
-                if (diagnosticFiles > 0)
+                if (diagnosticDirectories.Count > 0)
                 {
+                    diagnosticDirectories.Sort(StringComparer.OrdinalIgnoreCase);
+
                     results.Add(new ScanResult(
                         Constants.DiagnosticFilesName,
                         string.Format(
                             Constants.DiagnosticSummaryFormat,
                             diagnosticFiles,
-                            Constants.DiagnosticFilesMessage
+                            Constants.DiagnosticFilesMessage,
+                            string.Join("\n", diagnosticDirectories)
                         ),
                         ScanStatus.NotChecked
                     ));
@@ -313,8 +335,36 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
             return false;
         }
 
-        private static string GetFileInformation(string extension)
+        private static bool IsSensitiveFileName(string fileName)
         {
+            return fileName.Equals(Constants.EnvironmentFileName, StringComparison.OrdinalIgnoreCase) ||
+                fileName.StartsWith(Constants.EnvironmentFilePrefix, StringComparison.OrdinalIgnoreCase) ||
+                fileName.Equals(Constants.AppSettingsFileName, StringComparison.OrdinalIgnoreCase) ||
+                fileName.Equals(Constants.CredentialsFileName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetFileInformation(string extension, string fileName)
+        {
+            if (fileName.Equals(Constants.EnvironmentFileName, StringComparison.OrdinalIgnoreCase) ||
+                fileName.StartsWith(Constants.EnvironmentFilePrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return FormatFileInformation(
+                    Constants.EnvironmentFileType,
+                    Constants.EnvironmentFileRisk,
+                    Constants.EnvironmentFileRecommendation
+                );
+            }
+
+            if (fileName.Equals(Constants.AppSettingsFileName, StringComparison.OrdinalIgnoreCase) ||
+                fileName.Equals(Constants.CredentialsFileName, StringComparison.OrdinalIgnoreCase))
+            {
+                return FormatFileInformation(
+                    Constants.ConfigurationFileType,
+                    Constants.ConfigurationFileRisk,
+                    Constants.ConfigurationFileRecommendation
+                );
+            }
+
             switch (extension.ToLowerInvariant())
             {
                 case Constants.DebugSymbolsExtension:
@@ -323,35 +373,48 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                         Constants.DebugSymbolsRisk,
                         Constants.DebugSymbolsRecommendation
                     );
-
                 case Constants.MonoDebugSymbolsExtension:
                     return FormatFileInformation(
                         Constants.MonoDebugSymbolsType,
                         Constants.MonoDebugSymbolsRisk,
                         Constants.MonoDebugSymbolsRecommendation
                     );
-
                 case Constants.CSharpSourceExtension:
                     return FormatFileInformation(
                         Constants.CSharpSourceType,
                         Constants.CSharpSourceRisk,
                         Constants.CSharpSourceRecommendation
                     );
-
                 case Constants.CSharpProjectExtension:
                     return FormatFileInformation(
                         Constants.CSharpProjectType,
                         Constants.CSharpProjectRisk,
                         Constants.CSharpProjectRecommendation
                     );
-
                 case Constants.VisualStudioSolutionExtension:
                     return FormatFileInformation(
                         Constants.VisualStudioSolutionType,
                         Constants.VisualStudioSolutionRisk,
                         Constants.VisualStudioSolutionRecommendation
                     );
-
+                case Constants.EnvironmentFileExtension:
+                case Constants.PemFileExtension:
+                case Constants.KeyFileExtension:
+                case Constants.P12FileExtension:
+                case Constants.PfxFileExtension:
+                    return FormatFileInformation(
+                        Constants.SecretFileType,
+                        Constants.SecretFileRisk,
+                        Constants.SecretFileRecommendation
+                    );
+                case Constants.BackupFileExtension:
+                case Constants.BackupLongFileExtension:
+                case Constants.OldFileExtension:
+                    return FormatFileInformation(
+                        Constants.BackupFileType,
+                        Constants.BackupFileRisk,
+                        Constants.BackupFileRecommendation
+                    );
                 default:
                     return FormatFileInformation(
                         Constants.UnknownFileType,
