@@ -278,6 +278,7 @@ namespace Fiascko.ReverseFiascko.Editor.UI
             );
 
             _statusMessageType = GetSummaryMessageType(warnings, uncheckedResults);
+            Debug.Log(Constants.FormatLogMessage(_statusMessage));
         }
 
         private void ScanBuild(string path)
@@ -300,6 +301,7 @@ namespace Fiascko.ReverseFiascko.Editor.UI
             );
 
             _statusMessageType = GetSummaryMessageType(warnings, uncheckedResults);
+            Debug.Log(Constants.FormatLogMessage(_statusMessage));
         }
 
         private void ApplyProtection()
