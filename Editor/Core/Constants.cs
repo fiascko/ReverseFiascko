@@ -37,7 +37,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         // Package
         public const string PackageName = "ReverseFiascko";
         public const string PackageVersion = "1.0.0";
-        public const string PackageDescription = "Unity Build Hardening & Reverse Engineering Risk Assessment Toolkit";
+        public const string PackageDescription = "Unity Build Hardening & Reverse Engineering Risk Assessment Toolkit.\nv" + PackageVersion;
         public const string MenuPath = "Tools/ReverseFiascko";
 
         // User Interface - Labels
