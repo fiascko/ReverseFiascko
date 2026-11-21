@@ -27,7 +27,8 @@ namespace Fiascko.ReverseFiascko.Editor.UI
         [MenuItem(Constants.MenuPath)]
         public static void Open()
         {
-            GetWindow<ReverseFiasckoWindow>(Constants.PackageName);
+            ReverseFiasckoWindow window = GetWindow<ReverseFiasckoWindow>(Constants.PackageName);
+            window.minSize = new Vector2(Constants.WindowMinWidth, Constants.WindowMinHeight);
         }
 
         private void OnGUI()

@@ -55,6 +55,8 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const float ResultIconSize = 20f;
         public const float ResultSpacing = 3f;
         public const float BuildPathMinHeight = 32f;
+        public const float WindowMinWidth = 300f;
+        public const float WindowMinHeight = 350f;
 
         // User Interface - Icons
         public const string ProtectedIconName = "TestPassed";
