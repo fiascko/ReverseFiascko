@@ -62,7 +62,6 @@ ReverseFiascko focuses on four areas.
 
 ### Project Protection
 
-Scan your Unity project to identify settings that may make reverse engineering easier.
 Scan your Unity project to identify settings and potential embedded secrets that may compromise build security.
 
 ReverseFiascko checks the scripting backend, IL2CPP compiler, Managed Stripping Level, development settings and stack traces.
