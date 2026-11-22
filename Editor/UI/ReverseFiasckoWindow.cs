@@ -275,6 +275,7 @@ namespace Fiascko.ReverseFiascko.Editor.UI
                 Constants.ProjectScanCompletedFormat,
                 Constants.ScanCompletedMessage,
                 warnings,
+                CountReviewRequired(_results),
                 uncheckedResults
             );
 
@@ -520,7 +521,8 @@ namespace Fiascko.ReverseFiascko.Editor.UI
             {
                 case ScanStatus.Warning:
                     return MessageType.Warning;
-
+                case ScanStatus.ReviewRequired:
+                    return MessageType.Info;
                 default:
                     return MessageType.None;
             }
@@ -549,6 +551,21 @@ namespace Fiascko.ReverseFiascko.Editor.UI
                     uncheckedResults++;
                 }
             }
+        }
+
+        private static int CountReviewRequired(List<ScanResult> results)
+        {
+            int count = 0;
+
+            foreach (ScanResult result in results)
+            {
+                if (result.Status == ScanStatus.ReviewRequired)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }

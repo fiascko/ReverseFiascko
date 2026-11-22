@@ -52,6 +52,7 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
             ScanManagedStripping(target, results);
             ScanDevelopmentBuild(options, results);
             ScanStackTraces(results);
+            results.Add(EmbeddedSecretsScanner.Scan());
 
             return results;
         }

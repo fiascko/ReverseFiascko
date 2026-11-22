@@ -8,6 +8,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
     {
         Protected,
         Warning,
+        ReviewRequired,
         NotChecked
     }
 
@@ -36,7 +37,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
     {
         // Package
         public const string PackageName = "ReverseFiascko";
-        public const string PackageVersion = "1.0.0";
+        public const string PackageVersion = "1.1.0";
         public const string PackageDescription = "Unity Build Hardening & Reverse Engineering Risk Assessment Toolkit.\nv" + PackageVersion;
         public const string MenuPath = "Tools/ReverseFiascko";
 
@@ -83,7 +84,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string CurrentValueFormat = "Current: {0}";
         public const string BuildConfigurationFormat = "Development: {0}, Script Debugging: {1}";
         public const string FullStackTracesFormat = "Full stack traces: {0}";
-        public const string ProjectScanCompletedFormat = "{0} - {1} warning(s), {2} unchecked";
+        public const string ProjectScanCompletedFormat = "{0} - {1} warning(s), {2} review required, {3} unchecked";
 
         // Project Scan - Log Types
         public static readonly LogType[] ScannedLogTypes =
@@ -93,6 +94,48 @@ namespace Fiascko.ReverseFiascko.Editor.Core
             LogType.Error,
             LogType.Assert,
             LogType.Exception
+        };
+
+        // Project Scan - Embedded Secrets
+        public const string EmbeddedSecretsName = "Embedded Secrets";
+        public const string EmbeddedSecretsClearMessage = "No potential secrets detected in the files that were analyzed.";
+        public const string EmbeddedSecretsReviewFormat = "{0} potential secret(s) detected. Review these locations:\n{1}\n\nValues are never displayed. Review findings manually before distribution.";
+        public const string EmbeddedSecretsIncompleteMessage = "The embedded secrets scan was incomplete. Some files could not be analyzed.";
+        public const string EmbeddedSecretsResultFormat = "{0} (Line {1})";
+        public const long EmbeddedSecretsMaxFileSize = 1024 * 1024;
+        public const string EmbeddedSecretsSkippedFormat = "{0} file(s) larger than 1 MB were skipped:\n{1}";
+        public const string EmbeddedSecretsAdditionalSkippedFormat = "\n{0} additional skipped file(s) not displayed.";
+        public const string EmbeddedSecretsAdditionalFindingsFormat = "\n\n{0} additional finding(s) not displayed.";
+
+        public static readonly string[] EmbeddedSecretsExtensions =
+        {
+            ".cs",
+            ".json",
+            ".xml",
+            ".env",
+            ".yaml",
+            ".yml",
+            ".txt",
+            ".asset",
+            ".prefab",
+            ".unity",
+            ".config",
+            ".properties"
+        };
+
+        public static readonly string[] PlaceholderValues =
+        {
+            "example",
+            "sample",
+            "placeholder",
+            "dummy",
+            "your_",
+            "your-",
+            "test",
+            "changeme",
+            "replace",
+            "null",
+            "none"
         };
 
         // IL2CPP Support - Detection

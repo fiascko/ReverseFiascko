@@ -4,7 +4,7 @@
 
 ReverseFiascko is a lightweight Unity Editor toolkit designed to help developers harden their builds and make reverse engineering more difficult.
 
-It analyzes Unity project settings, applies recommended protection configurations, validates builds and scans build outputs for potentially sensitive files.
+It analyzes Unity project settings, applies recommended protection configurations, validates builds, scans project files for potentially embedded secrets and checks build outputs for potentially sensitive files.
 
 ReverseFiascko does not prevent reverse engineering. Its goal is to raise the difficulty, especially against casual attackers and script kiddies, while encouraging good Unity build security practices.
 
@@ -37,6 +37,9 @@ Everything runs locally inside the Unity Editor.
 - Check Managed Stripping Level
 - Check Development Build and Script Debugging settings
 - Check Stack Trace settings
+- Scan Unity project files for potentially embedded secrets
+- Detect hardcoded API keys, access tokens and passwords
+- Report potential secrets without exposing their values
 - Apply recommended protection settings automatically
 - Validate project settings before building
 - Off, Warning and Strict validation modes
@@ -60,10 +63,17 @@ ReverseFiascko focuses on four areas.
 ### Project Protection
 
 Scan your Unity project to identify settings that may make reverse engineering easier.
+Scan your Unity project to identify settings and potential embedded secrets that may compromise build security.
 
 ReverseFiascko checks the scripting backend, IL2CPP compiler, Managed Stripping Level, development settings and stack traces.
 
-Use **Apply Protection** to configure the recommended settings automatically.
+It also scans supported files inside the `Assets` directory for potentially hardcoded API keys, access tokens, passwords and other sensitive credentials.
+
+Potential secrets are reported with file paths and line numbers without exposing their values. Detection is pattern-based and requires manual review.
+
+Files larger than 1 MB are skipped and reported. Incomplete scans are identified in the results.
+
+Use **Apply Protection** to configure the recommended protection settings automatically.
 
 Settings that cannot be verified are reported rather than assumed to be secure.
 
@@ -137,7 +147,11 @@ ReverseFiascko is not an anti-cheat system, code obfuscator, encryption tool or 
 
 A successful scan means that the checked conditions passed. It does not mean that the build is completely secure.
 
-The Build Scanner uses filename, extension and directory-based detection. It does not inspect file contents or guarantee the detection of embedded secrets, credentials or other sensitive information.
+The Build Scanner uses filename, extension and directory-based detection. It does not inspect file contents.
+
+The Embedded Secrets Scanner analyzes supported project files using pattern-based detection. It cannot guarantee the detection of all hardcoded secrets, credentials or other sensitive information.
+
+Both scanners are intended to assist manual security reviews, not replace them.
 
 **Security is a process, not a checkbox.**
 
@@ -206,7 +220,7 @@ No additional dependencies are required.
 
 1. Open your Unity project.
 2. Navigate to `Tools > ReverseFiascko`.
-3. Click **Scan Project** to analyze your current configuration.
+3. Click **Scan Project** to analyze your current protection settings and scan project files for potentially embedded secrets.
 4. Review the results and recommendations.
 5. Click **Apply Protection** if changes are recommended.
 6. Choose your preferred Build Validation mode.
@@ -232,6 +246,7 @@ ReverseFiascko/
 │   │
 │   ├── Scanning/
 │   │   ├── BuildScanner.cs
+│   │   ├── EmbeddedSecretsScanner.cs
 │   │   ├── Il2CppSupport.cs
 │   │   ├── ProjectScanner.cs
 │   │   └── ScanResult.cs
