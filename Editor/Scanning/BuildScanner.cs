@@ -43,6 +43,9 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
 
             int scannedFiles = 0;
             int detectedFiles = 0;
+            int warningFiles = 0;
+            int reviewRequiredFiles = 0;
+            int uncheckedFiles = 0;
             int diagnosticFiles = 0;
             List<string> diagnosticDirectories = new List<string>();
 
@@ -72,20 +75,96 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                     string extension = Path.GetExtension(file);
                     string fileName = Path.GetFileName(file);
 
-                    if (IsDebugSymbolDirectory(file) || (!SensitiveExtensions.Contains(extension) && !IsSensitiveFileName(fileName)))
+                    if (IsDebugSymbolDirectory(file))
                     {
                         continue;
                     }
 
+                    bool isSensitiveFile = SensitiveExtensions.Contains(extension) ||
+                        IsSensitiveFileName(fileName);
+
                     if (IsDiagnosticFile(buildPath, file))
                     {
-                        diagnosticFiles++;
+                        if (isSensitiveFile || extension.Equals(Constants.ManagedAssemblyExtension, StringComparison.OrdinalIgnoreCase))
+                        {
+                            diagnosticFiles++;
+                        }
+
+                        continue;
+                    }
+
+                    bool isManagedAssembly = false;
+
+                    if (extension.Equals(Constants.ManagedAssemblyExtension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        try
+                        {
+                            isManagedAssembly = IsManagedAssembly(file);
+                        }
+                        catch (IOException exception)
+                        {
+                            uncheckedFiles++;
+
+                            results.Add(new ScanResult(
+                                fileName,
+                                string.Format(
+                                    Constants.ManagedAssemblyReadErrorFormat,
+                                    exception.Message,
+                                    Constants.FilePathLabel,
+                                    GetRelativePath(buildPath, file)
+                                ),
+                                ScanStatus.NotChecked
+                            ));
+
+                            continue;
+                        }
+                        catch (UnauthorizedAccessException exception)
+                        {
+                            uncheckedFiles++;
+
+                            results.Add(new ScanResult(
+                                fileName,
+                                string.Format(
+                                    Constants.ManagedAssemblyReadErrorFormat,
+                                    exception.Message,
+                                    Constants.FilePathLabel,
+                                    GetRelativePath(buildPath, file)
+                                ),
+                                ScanStatus.NotChecked
+                            ));
+
+                            continue;
+                        }
+                    }
+
+                    if (!isSensitiveFile && !isManagedAssembly)
+                    {
                         continue;
                     }
 
                     detectedFiles++;
 
-                    string details = GetFileInformation(extension, fileName);
+                    ScanStatus fileStatus = isManagedAssembly
+                        ? ScanStatus.ReviewRequired
+                        : ScanStatus.Warning;
+
+                    if (isManagedAssembly)
+                    {
+                        reviewRequiredFiles++;
+                    }
+                    else
+                    {
+                        warningFiles++;
+                    }
+
+                    string details = isManagedAssembly
+                        ? FormatFileInformation(
+                            Constants.ManagedAssemblyType,
+                            Constants.ManagedAssemblyRisk,
+                            Constants.ManagedAssemblyRecommendation
+                        )
+                        : GetFileInformation(extension, fileName);
+
                     string relativePath = GetRelativePath(buildPath, file);
 
                     results.Add(new ScanResult(
@@ -96,10 +175,10 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                             Constants.FilePathLabel,
                             relativePath
                         ),
-                        ScanStatus.Warning
+                        fileStatus
                     ));
                 }
-                
+
                 foreach (string directory in Directory.EnumerateDirectories(
                     buildPath,
                     "*",
@@ -135,6 +214,7 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                     }
 
                     detectedFiles++;
+                    warningFiles++;
 
                     string details = FormatFileInformation(
                         Constants.MacDebugSymbolsType,
@@ -177,11 +257,15 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
 
                 ScanStatus status;
 
-                if (detectedFiles > 0)
+                if (warningFiles > 0)
                 {
                     status = ScanStatus.Warning;
                 }
-                else if (applicationPath == null)
+                else if (reviewRequiredFiles > 0)
+                {
+                    status = ScanStatus.ReviewRequired;
+                }
+                else if (uncheckedFiles > 0 || applicationPath == null)
                 {
                     status = ScanStatus.NotChecked;
                 }
@@ -294,6 +378,94 @@ namespace Fiascko.ReverseFiascko.Editor.Scanning
                        path,
                        Constants.MacApplicationContentsDirectory
                    ));
+        }
+
+        private static bool IsManagedAssembly(string filePath)
+        {
+            using (FileStream stream = File.OpenRead(filePath))
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                if (stream.Length < Constants.PeHeaderOffset + sizeof(int))
+                {
+                    return false;
+                }
+
+                if (reader.ReadUInt16() != Constants.PeDosSignature)
+                {
+                    return false;
+                }
+
+                stream.Position = Constants.PeHeaderOffset;
+                int peOffset = reader.ReadInt32();
+
+                if (peOffset < Constants.PeHeaderOffset + sizeof(int) ||
+                    (long)peOffset + sizeof(uint) + Constants.PeCoffHeaderSize > stream.Length)
+                {
+                    return false;
+                }
+
+                stream.Position = peOffset;
+
+                if (reader.ReadUInt32() != Constants.PeSignature)
+                {
+                    return false;
+                }
+
+                stream.Position += Constants.PeOptionalHeaderSizeOffset;
+                ushort optionalHeaderSize = reader.ReadUInt16();
+                stream.Position += sizeof(ushort);
+
+                long optionalHeaderStart = stream.Position;
+
+                if (optionalHeaderSize < Constants.PeOptionalHeaderMagicSize ||
+                    optionalHeaderStart + optionalHeaderSize > stream.Length)
+                {
+                    return false;
+                }
+
+                ushort magic = reader.ReadUInt16();
+
+                int dataDirectoryOffset;
+                int directoryCountOffset;
+
+                switch (magic)
+                {
+                    case Constants.Pe32Magic:
+                        dataDirectoryOffset = Constants.Pe32DataDirectoryOffset;
+                        directoryCountOffset = Constants.Pe32DirectoryCountOffset;
+                        break;
+
+                    case Constants.Pe32PlusMagic:
+                        dataDirectoryOffset = Constants.Pe32PlusDataDirectoryOffset;
+                        directoryCountOffset = Constants.Pe32PlusDirectoryCountOffset;
+                        break;
+
+                    default:
+                        return false;
+                }
+
+                int cliDirectoryOffset = dataDirectoryOffset +
+                    Constants.PeCliDirectoryIndex * Constants.PeDataDirectorySize;
+
+                if (optionalHeaderSize < cliDirectoryOffset + Constants.PeDataDirectorySize)
+                {
+                    return false;
+                }
+
+                stream.Position = optionalHeaderStart + directoryCountOffset;
+
+                if (reader.ReadUInt32() <= Constants.PeCliDirectoryIndex)
+                {
+                    return false;
+                }
+
+                stream.Position = optionalHeaderStart + cliDirectoryOffset;
+
+                uint cliHeaderRva = reader.ReadUInt32();
+                uint cliHeaderSize = reader.ReadUInt32();
+
+                return cliHeaderRva != 0 && cliHeaderSize != 0;
+            }
         }
 
         private static bool IsInsideDirectory(string directory, string file)

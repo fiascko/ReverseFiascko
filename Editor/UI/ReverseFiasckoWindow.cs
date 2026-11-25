@@ -293,12 +293,13 @@ namespace Fiascko.ReverseFiascko.Editor.UI
 
             _buildResults = BuildScanner.Scan(path);
 
-            CountScanResults(_buildResults, out int warnings, out int uncheckedResults);
+            CountScanResults(_buildResults, out int warnings, out int uncheckedResults, true);
 
             _statusMessage = string.Format(
                 Constants.BuildScanCompletedFormat,
                 Constants.BuildScanCompletedMessage,
                 warnings,
+                CountReviewRequired(_buildResults, true),
                 uncheckedResults
             );
 
@@ -335,6 +336,7 @@ namespace Fiascko.ReverseFiascko.Editor.UI
                     : Constants.ProtectionFullyAppliedMessage;
 
                 _statusMessageType = GetSummaryMessageType(warnings, uncheckedResults);
+                Debug.Log(Constants.FormatLogMessage(Constants.ProtectionAppliedLogMessage));
             }
         }
 
@@ -535,13 +537,18 @@ namespace Fiascko.ReverseFiascko.Editor.UI
                 : MessageType.Info;
         }
 
-        private static void CountScanResults(List<ScanResult> results, out int warnings, out int uncheckedResults)
+        private static void CountScanResults(List<ScanResult> results, out int warnings, out int uncheckedResults, bool excludeBuildSummary = false)
         {
             warnings = 0;
             uncheckedResults = 0;
 
             foreach (ScanResult result in results)
             {
+                if (excludeBuildSummary && result.Name == Constants.BuildScanName)
+                {
+                    continue;
+                }
+
                 if (result.Status == ScanStatus.Warning)
                 {
                     warnings++;
@@ -553,12 +560,17 @@ namespace Fiascko.ReverseFiascko.Editor.UI
             }
         }
 
-        private static int CountReviewRequired(List<ScanResult> results)
+        private static int CountReviewRequired(List<ScanResult> results, bool excludeBuildSummary = false)
         {
             int count = 0;
 
             foreach (ScanResult result in results)
             {
+                if (excludeBuildSummary && result.Name == Constants.BuildScanName)
+                {
+                    continue;
+                }
+
                 if (result.Status == ScanStatus.ReviewRequired)
                 {
                     count++;

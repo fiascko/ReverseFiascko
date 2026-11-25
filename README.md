@@ -14,13 +14,9 @@ ReverseFiascko does not prevent reverse engineering. Its goal is to raise the di
 
 ReverseFiascko is built around two ideas: **make Unity build hardening simple and promote good security practices without unnecessary complexity.**
 
-- No external dependencies
-- No third-party packages
-- No external frameworks
-- No runtime components
-- No runtime performance overhead
-- No accounts
-- No cloud services required by ReverseFiascko
+- No external dependencies or third-party packages
+- No runtime components or performance overhead
+- No accounts or cloud services
 - No tracking
 - No unnecessary complexity
 
@@ -32,29 +28,18 @@ Everything runs locally inside the Unity Editor.
 
 ## Features
 
-- Scan Unity project protection settings
-- Check IL2CPP availability, scripting backend and compiler configuration
-- Check Managed Stripping Level
-- Check Development Build and Script Debugging settings
-- Check Stack Trace settings
-- Scan Unity project files for potentially embedded secrets
-- Detect hardcoded API keys, access tokens and passwords
-- Report potential secrets without exposing their values
+- Scan Unity project protection settings, including IL2CPP, scripting backend, compiler configuration and Managed Stripping Level
+- Check Development Build, Script Debugging and Stack Trace settings
+- Detect potentially embedded secrets, including API keys, access tokens and passwords, without exposing their values
 - Apply recommended protection settings automatically
-- Validate project settings before building
-- Off, Warning and Strict validation modes
-- Scan completed builds for potentially sensitive files
-- Detect debug symbols (`.pdb`, `.mdb`, `.dSYM`)
-- Detect source and project files (`.cs`, `.csproj`, `.sln`)
-- Detect potentially sensitive files (`.env`, `.pem`, `.key`, `.p12`, `.pfx`)
-- Detect potentially sensitive configuration files (`appsettings.json`, `credentials.json`)
-- Detect backup files (`.bak`, `.backup`, `.old`)
+- Validate project settings before building with Off, Warning and Strict modes
+- Scan completed Windows and macOS builds for potentially sensitive files
+- Detect debug symbols, source files, project files, configuration files and backups
+- Identify managed DLL assemblies that may require manual review
 - Identify Unity diagnostic and backup directories
 - Display scan results and security recommendations
-- Generate an optional AI Analysis Notice for release builds
-- Standard and custom AI Analysis Notice content
-- macOS and Windows build scanning
-- Unity Editor-only, with no external dependencies or runtime overhead
+- Generate an optional AI Analysis Notice for release builds with standard or custom content
+- Run entirely inside the Unity Editor without external dependencies or runtime overhead
 
 ## How It Works
 
@@ -98,17 +83,24 @@ ReverseFiascko detects:
 - Environment configuration variants (such as `.env.local` and `.env.production`)
 - Potentially sensitive configuration files (`appsettings.json`, `credentials.json`)
 - Backup files (`.bak`, `.backup`, `.old`)
+- Managed DLL assemblies
 - Unity diagnostic and backup directories
 
 Each detected file is reported with its location, potential risk and recommended action.
 
-The scanner does not inspect file contents, modify files or automatically remove detected items.
+Managed DLL assemblies are identified by inspecting their PE headers and are marked as ReviewRequired. Their presence does not necessarily indicate a security vulnerability.
 
-Detection is based on filenames, extensions and directory structures. A warning does not necessarily indicate a security vulnerability, and legitimate files may be required by the application.
+Unity diagnostic and backup directories are reported separately. Potentially sensitive files inside these directories are counted without generating individual warnings. DLLs in these directories are not inspected.
+
+Scan results distinguish between warnings, findings requiring manual review and conditions that could not be verified.
+
+The scanner does not decompile assemblies, modify files or automatically remove detected items.
+
+Other file detection is based on filenames, extensions and directory structures. A warning does not necessarily indicate a security vulnerability, and legitimate files may be required by the application.
 
 ### AI Analysis Notice
 
-Optionally generate an `AI_ANALYSIS_NOTICE.txt` file for release builds.
+Optionally generate an `AI_ANALYSIS_NOTICE.txt` file for release builds using standard or custom content.
 
 On Windows and macOS, the notice is generated in two locations:
 - Alongside the game executable or application.
@@ -116,15 +108,11 @@ On Windows and macOS, the notice is generated in two locations:
 
 The notice communicates that the developer does not authorize unauthorized reverse engineering or analysis of the software.
 
-It may also help certain AI-powered analysis tools recognize that reverse engineering is not authorized, potentially triggering warnings, restrictions or additional safeguards.
+It may discourage certain AI-powered analysis tools from performing unauthorized analysis, depending on how those tools are configured.
 
-Depending on how an AI system is configured, the notice may discourage or interrupt automated analysis, making the process more difficult.
+This feature is an informational deterrent, not a technical protection mechanism. The notice is not embedded into executable code, and there is no guarantee that AI tools or decompilers will read, recognize or respect it.
 
-You can use the standard notice or provide custom text.
-
-This feature is informational and acts as an additional deterrent. Placing the notice inside the build makes it available during file inspection but does not embed it directly into the executable code or guarantee that decompilers or AI tools will read it.
-
-It does not guarantee that AI tools will recognize, respect or enforce the notice, nor does it technically prevent reverse engineering or provide guaranteed legal protection.
+It does not prevent reverse engineering or provide guaranteed legal protection.
 
 ## Security Limitations
 
@@ -146,21 +134,13 @@ ReverseFiascko is not an anti-cheat system, code obfuscator, encryption tool or 
 
 A successful scan means that the checked conditions passed. It does not mean that the build is completely secure.
 
-The Build Scanner uses filename, extension and directory-based detection. It does not inspect file contents.
+The Build Scanner detects potentially sensitive files using filenames, extensions and directory structures. It also inspects PE headers to identify managed DLL assemblies, without decompiling or analyzing their code.
 
 The Embedded Secrets Scanner analyzes supported project files using pattern-based detection. It cannot guarantee the detection of all hardcoded secrets, credentials or other sensitive information.
 
 Both scanners are intended to assist manual security reviews, not replace them.
 
 **Security is a process, not a checkbox.**
-
-## Development Status
-
-ReverseFiascko is an ongoing project and will continue to evolve over time.
-
-New features, improvements and additional security checks are planned for future updates.
-
-The goal is to keep ReverseFiascko lightweight, simple and dependency-free while continuously improving its capabilities.
 
 ## Privacy by Design
 

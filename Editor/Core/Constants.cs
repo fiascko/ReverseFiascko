@@ -37,7 +37,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
     {
         // Package
         public const string PackageName = "ReverseFiascko";
-        public const string PackageVersion = "1.1.0";
+        public const string PackageVersion = "1.1.1";
         public const string PackageDescription = "Unity Build Hardening & Reverse Engineering Risk Assessment Toolkit.\nv" + PackageVersion;
         public const string MenuPath = "Tools/ReverseFiascko";
 
@@ -161,7 +161,8 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string ProtectionFullyAppliedMessage = "Protection settings applied successfully. No warnings remain.";
         public const string ProtectionPartiallyAppliedMessage = "Some protection warnings remain. Review the scan results and recommendations below.";
         public const string UnknownBuildTargetError = "Cannot apply protection because the active build target is unknown.";
-
+        public const string ProtectionAppliedLogMessage = "Recommended protection settings applied.";
+        
         // Apply Protection - Recommended Settings
         public const ScriptingImplementation RecommendedScriptingBackend = ScriptingImplementation.IL2CPP;
         public const Il2CppCompilerConfiguration RecommendedIl2CppCompiler = Il2CppCompilerConfiguration.Master;
@@ -199,9 +200,10 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string BuildScanCompletedMessage = "Build scan completed";
         public const string InvalidBuildDirectoryMessage = "The selected build directory does not exist.";
         public const string BuildScanIncompleteMessage = "The build scan could not be completed. Results may be incomplete.";
+        public const string ManagedAssemblyReadErrorFormat = "Unable to inspect this DLL: {0}\n\n{1}: {2}";
 
         // Build Scan - Formats
-        public const string BuildScanCompletedFormat = "{0} Warnings: {1}, Not checked: {2}";        
+        public const string BuildScanCompletedFormat = "{0} - {1} warning(s), {2} review required, {3} unchecked";
         public const string BuildScanSummaryFormat = "Scanned {0} files. Found {1} potentially sensitive file(s) in the build distribution.";
         public const string DiagnosticSummaryFormat = "Found {0} potentially sensitive diagnostic file(s).\n\nDirectories to exclude from distribution:\n{2}\n\n{1}";
         public const string BuildScanSummaryDetailsFormat = "{0}: {1}\n{2}: {3}\n{4}: {5}\n{6}: {7}\n\n{8}";
@@ -275,6 +277,28 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string OldFileExtension = ".old";
         public const string AppSettingsFileName = "appsettings.json";
         public const string CredentialsFileName = "credentials.json";
+
+        // Build Scan - Managed Assembly Detection
+        public const string ManagedAssemblyExtension = ".dll";
+        public const string ManagedAssemblyType = "Managed Assembly";
+        public const string ManagedAssemblyRisk = "Managed .NET assemblies may expose compiled C# code to decompilation.";
+        public const string ManagedAssemblyRecommendation = "Review whether this assembly is required in the public build. Use IL2CPP for game code when supported.";
+
+        // Build Scan - PE Format
+        public const ushort PeDosSignature = 0x5A4D;
+        public const uint PeSignature = 0x00004550;
+        public const ushort Pe32Magic = 0x10B;
+        public const ushort Pe32PlusMagic = 0x20B;
+        public const int PeHeaderOffset = 0x3C;
+        public const int PeCoffHeaderSize = 20;
+        public const int PeOptionalHeaderSizeOffset = 16;
+        public const int PeOptionalHeaderMagicSize = 2;
+        public const int Pe32DataDirectoryOffset = 96;
+        public const int Pe32PlusDataDirectoryOffset = 112;
+        public const int Pe32DirectoryCountOffset = 92;
+        public const int Pe32PlusDirectoryCountOffset = 108;
+        public const int PeCliDirectoryIndex = 14;
+        public const int PeDataDirectorySize = 8;
 
         // Build Validation - Interface
         public const string ValidationModeLabel = "Build Validation";
