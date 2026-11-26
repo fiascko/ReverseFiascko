@@ -48,9 +48,11 @@ namespace Fiascko.ReverseFiascko.Editor.Build
 
                 string externalDirectory = GetBuildDirectory(outputPath);
                 string internalDirectory = GetInternalNoticeDirectory(outputPath);
+                string additionalDirectory = GetAdditionalNoticeDirectory(outputPath);
 
                 WriteNotice(externalDirectory, noticeContent);
                 WriteNotice(internalDirectory, noticeContent);
+                WriteNotice(additionalDirectory, noticeContent);
             }
             catch (Exception exception)
             {
@@ -122,6 +124,47 @@ namespace Fiascko.ReverseFiascko.Editor.Build
                 string name = Path.GetFileNameWithoutExtension(fullPath);
 
                 return Path.Combine(directory, name + Constants.WindowsDataDirectorySuffix);
+            }
+
+            return null;
+        }
+
+        private static string GetAdditionalNoticeDirectory(string buildPath)
+        {
+            string fullPath = Path.GetFullPath(buildPath);
+
+            if (fullPath.EndsWith(
+                Constants.MacApplicationExtension,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return Path.Combine(
+                    fullPath,
+                    Constants.MacApplicationContentsDirectory,
+                    Constants.MacApplicationExecutablesDirectory
+                );
+            }
+
+            if (fullPath.EndsWith(
+                Constants.WindowsExecutableExtension,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                string directory = Path.GetDirectoryName(fullPath);
+                string name = Path.GetFileNameWithoutExtension(fullPath);
+                string dataDirectory = Path.Combine(directory, name + Constants.WindowsDataDirectorySuffix);
+
+                string managedDirectory = Path.Combine(dataDirectory, Constants.ManagedDirectory);
+
+                if (Directory.Exists(managedDirectory))
+                {
+                    return managedDirectory;
+                }
+
+                string il2CppDirectory = Path.Combine(dataDirectory, Constants.Il2CppDataDirectory);
+
+                if (Directory.Exists(il2CppDirectory))
+                {
+                    return il2CppDirectory;
+                }
             }
 
             return null;

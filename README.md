@@ -102,17 +102,17 @@ Other file detection is based on filenames, extensions and directory structures.
 
 Optionally generate an `AI_ANALYSIS_NOTICE.txt` file for release builds using standard or custom content.
 
-On Windows and macOS, the notice is generated in two locations:
-- Alongside the game executable or application.
-- Inside the Unity build structure (`_Data` directory on Windows or `Contents/Resources` inside the `.app` bundle on macOS).
+The notice is placed in up to three locations on Windows and macOS:
 
-The notice communicates that the developer does not authorize unauthorized reverse engineering or analysis of the software.
+- **External:** Alongside the game executable or application.
+- **Internal:** Inside `Game_Data` on Windows or `Contents/Resources` on macOS.
+- **Additional:** Inside `Game_Data/Managed` or `Game_Data/il2cpp_data` on Windows, or `Contents/MacOS` on macOS.
 
-It may discourage certain AI-powered analysis tools from performing unauthorized analysis, depending on how those tools are configured.
+Additional locations are used only when the corresponding directories exist. No directories are created, and generation results are logged in the Unity Console.
 
-This feature is an informational deterrent, not a technical protection mechanism. The notice is not embedded into executable code, and there is no guarantee that AI tools or decompilers will read, recognize or respect it.
+The notice expresses the developer's intent to restrict unauthorized reverse engineering and AI-assisted analysis of their software.
 
-It does not prevent reverse engineering or provide guaranteed legal protection.
+This feature is informational only. It does not prevent reverse engineering, guarantee legal protection, or ensure that AI tools and decompilers will recognize or respect the notice.
 
 ## Security Limitations
 

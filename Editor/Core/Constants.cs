@@ -37,7 +37,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
     {
         // Package
         public const string PackageName = "ReverseFiascko";
-        public const string PackageVersion = "1.1.1";
+        public const string PackageVersion = "1.1.2";
         public const string PackageDescription = "Unity Build Hardening & Reverse Engineering Risk Assessment Toolkit.\nv" + PackageVersion;
         public const string MenuPath = "Tools/ReverseFiascko";
 
@@ -258,6 +258,9 @@ namespace Fiascko.ReverseFiascko.Editor.Core
         public const string WindowsExecutableExtension = ".exe";
         public const string MacApplicationContentsDirectory = "Contents";
         public const string WindowsDataDirectorySuffix = "_Data";
+        public const string MacApplicationExecutablesDirectory = "MacOS";
+        public const string ManagedDirectory = "Managed";
+        public const string Il2CppDataDirectory = "il2cpp_data";
         public const string DebugSymbolsExtension = ".pdb";
         public const string MonoDebugSymbolsExtension = ".mdb";
         public const string CSharpSourceExtension = ".cs";
@@ -317,7 +320,7 @@ namespace Fiascko.ReverseFiascko.Editor.Core
 
         // AI Analysis Notice - Interface
         public const string AiNoticeTitle = "AI Analysis Notice";
-        public const string AiNoticeDescription = "Configure an informational notice for release builds. It communicates restrictions to AI systems and automated analysis tools but does not technically prevent analysis.";
+        public const string AiNoticeDescription = "Configure an informational notice for release builds. It communicates the developer's restrictions on unauthorized reverse engineering and AI-assisted analysis but does not prevent them.";
         public const string AiNoticeEnabledLabel = "Enable AI Analysis Notice";
         public const string AiNoticeModeLabel = "Notice Content";
         public const string AiNoticePreviewLabel = "Notice Preview";
